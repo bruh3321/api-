@@ -9,7 +9,7 @@ const password = ref("");
 const message = ref("");
 const isLoggedIn = ref(false);
 
-// Handle successful login
+
 const handleLogin = () => {
     isLoggedIn.value = true;
     router.push("/congratulations");
