@@ -69,7 +69,7 @@ const register = async () => {
             />
             <div class="button-container">
                 <button class="login-btn" @click="login">Login</button>
-                <button class="register-btn" @lick="register">Register</button>
+                <button class="register-btn" @click="register">Register</button>
             </div>
             <div v-if="message" class="error-message">{{ message }}</div>
         </div>

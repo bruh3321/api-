@@ -34,7 +34,7 @@ def register():
     try:
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        cursor.execute(f'INSERT INTO users (username, password) VALUES ({username}, {password})')
+        cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
         conn.commit()
         conn.close()
         return jsonify({"message": "User  registered successfully!"}), 201
