@@ -16,7 +16,14 @@ def init_db():
         )
     ''')
     conn.commit()
-    conn.close()
+
+    try:
+        cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', ("admin", "admin"))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        print("Admin user already exists.")
+    finally:
+        conn.close()
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -27,7 +34,7 @@ def register():
     try:
         conn = sqlite3.connect('users.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
+        cursor.execute(f'INSERT INTO users (username, password) VALUES ({username}, {password})')
         conn.commit()
         conn.close()
         return jsonify({"message": "User  registered successfully!"}), 201

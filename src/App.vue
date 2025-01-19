@@ -9,7 +9,6 @@ const password = ref("");
 const message = ref("");
 const isLoggedIn = ref(false);
 
-
 const handleLogin = () => {
     isLoggedIn.value = true;
     router.push("/congratulations");
@@ -39,7 +38,7 @@ const register = async () => {
             password: password.value,
         });
         if (response.status === 201) {
-            message.value = response.data.message;
+            message.value = "succesfuly registered user";
             console.log("it did register still");
         }
     } catch (error) {
