@@ -8,6 +8,8 @@ const username = ref("");
 const password = ref("");
 const message = ref("");
 const isLoggedIn = ref(false);
+const loginpy = "http://127.0.0.1:5000/login";
+const registerpy = "http://127.0.0.1:5000/register";
 
 const handleLogin = () => {
     isLoggedIn.value = true;
@@ -16,7 +18,7 @@ const handleLogin = () => {
 
 const login = async () => {
     try {
-        const response = await axios.post("http://127.0.0.1:5000/login", {
+        const response = await axios.post(loginpy, {
             username: username.value,
             password: password.value,
         });
@@ -33,7 +35,7 @@ const login = async () => {
 };
 const register = async () => {
     try {
-        const response = await axios.post("http://127.0.0.1:5000/register", {
+        const response = await axios.post(registerpy, {
             username: username.value,
             password: password.value,
         });
@@ -48,6 +50,10 @@ const register = async () => {
             : "An error has occurred";
     }
 };
+function logout() {
+    isLoggedIn.value = false;
+    router.push("/");
+}
 </script>
 
 <template>
@@ -75,6 +81,7 @@ const register = async () => {
         </div>
         <div v-else>
             <h1>Congratulations! You are logged in.</h1>
+            <button class="logout" @click="logout">Log out</button>
         </div>
     </main>
 </template>
@@ -104,6 +111,23 @@ h1 {
     font-size: 2.5rem;
     color: #ff69b4;
     text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.5);
+    animation: bounce 2s infinite ease-in-out;
+}
+.logout {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        transform 0.3s,
+        background-color 0.3s;
+    background-color: #8a2be2;
+    color: white;
+    box-shadow: 0px 5px 15px rgba(138, 43, 226, 0.3);
+    animation: bounce 2s infinite ease-in-out;
 }
 .login-container {
     background: rgba(50, 50, 50, 0.9);
