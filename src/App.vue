@@ -20,10 +20,7 @@ const isLoggedIn = ref(false);
 const loginpy = "http://127.0.0.1:5000/login";
 const registerpy = "http://127.0.0.1:5000/register";
 const protectedpy = "http://127.0.0.1:5000/protected";
-const handleLogin = () => {
-    isLoggedIn.value = true;
-    router.push("/congratulations");
-};
+
 const login = async () => {
     try {
         const response = await axios.post(loginpy, {
