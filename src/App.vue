@@ -30,7 +30,7 @@ const login = async () => {
 
         if (response.status === 200) {
             const token = response.data.token;
-            localStorage.setItem("token", token); // Store the token
+            localStorage.setItem("token", token); // storing token
             message.value = "Login successful!";
             isLoggedIn.value = true;
             router.push("/congratulations");
