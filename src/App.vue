@@ -2,6 +2,15 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import { onMounted } from "vue";
+
+onMounted(() => {                   //this is to detect if a user is previously logged in
+    const token = localStorage.getItem("token");
+    if (token) {
+        isLoggedIn.value = true;
+    }
+});         
+
 
 const router = useRouter();
 const username = ref("");
@@ -10,12 +19,11 @@ const message = ref("");
 const isLoggedIn = ref(false);
 const loginpy = "http://127.0.0.1:5000/login";
 const registerpy = "http://127.0.0.1:5000/register";
-
+const protectedpy = "http://127.0.0.1:5000/protected";
 const handleLogin = () => {
     isLoggedIn.value = true;
     router.push("/congratulations");
 };
-
 const login = async () => {
     try {
         const response = await axios.post(loginpy, {
@@ -24,13 +32,16 @@ const login = async () => {
         });
 
         if (response.status === 200) {
-            message.value = response.data.message;
-            handleLogin();
+            const token = response.data.token;
+            localStorage.setItem("token", token); // Store the token
+            message.value = "Login successful!";
+            isLoggedIn.value = true;
+            router.push("/congratulations");
         }
     } catch (error) {
         message.value = error.response
             ? error.response.data.message
-            : "wrong username or password / or account none existent";
+            : "Wrong username or password / or account non-existent";
     }
 };
 const register = async () => {
@@ -50,7 +61,27 @@ const register = async () => {
             : "An error has occurred";
     }
 };
+async function getProtectedData() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        message.value = "You need to log in first.";
+        return;
+    }
+
+    try {
+        const response = await axios.get(protectedpy, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        console.log(response.data);
+        message.value = response.data.message;
+    } catch (error) {
+        message.value = "Failed to fetch protected data.";
+    }
+}
 function logout() {
+    localStorage.removeItem("token"); // Remove token
     isLoggedIn.value = false;
     router.push("/");
 }
