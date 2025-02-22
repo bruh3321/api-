@@ -1,1 +1,1 @@
-fuck you, you didnt even add a readme file
+website so i can practice my api work and some front end animations
