@@ -6,7 +6,8 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 
 app = Flask(__name__)
-CORS(app, resources={r"/api-/": {"origins": "https://bruh3321.github.io"}})
+CORS(app, origins="https://bruh3321.github.io")
+
 
 app.config['JWT_SECRET_KEY'] = 'pipi'
 jwt = JWTManager(app)
