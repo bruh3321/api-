@@ -87,7 +87,7 @@ function logout() {
 <template>
     <main>
         <div class="login-container" v-if="!isLoggedIn">
-            <h1>sorry our api is broken at the moment</h1>
+            <h1>sorry our api is broken at the moment :(</h1>
             <input
                 type="text"
                 class="user"
