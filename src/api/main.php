@@ -12,13 +12,15 @@ if (!file_exists($usersFile)) {
 }
 
 // Load users from JSON file
-function loadUsers() {
+function loadUsers()
+{
     global $usersFile;
     return json_decode(file_get_contents($usersFile), true);
 }
 
 // Save users to JSON file
-function saveUsers($users) {
+function saveUsers($users)
+{
     global $usersFile;
     file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT));
 }
@@ -28,7 +30,7 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 if ($requestMethod == 'POST') {
     $path = explode("/", trim($_SERVER['REQUEST_URI'], "/"));
-    
+
     // Read input JSON
     $input = json_decode(file_get_contents("php://input"), true);
 
@@ -43,7 +45,8 @@ if ($requestMethod == 'POST') {
 }
 
 // Register user
-function registerUser($data) {
+function registerUser($data)
+{
     if (!isset($data['username']) || !isset($data['password'])) {
         http_response_code(400);
         echo json_encode(["message" => "Username and password required"]);
@@ -70,7 +73,8 @@ function registerUser($data) {
 }
 
 // Login user
-function loginUser($data) {
+function loginUser($data)
+{
     if (!isset($data['username']) || !isset($data['password'])) {
         http_response_code(400);
         echo json_encode(["message" => "Username and password required"]);
