@@ -17,9 +17,9 @@ const username = ref("");
 const password = ref("");
 const message = ref("");
 const isLoggedIn = ref(false);
-const loginpy = "http://127.0.0.1:5000/login";
-const registerpy = "http://127.0.0.1:5000/register";
-const protectedpy = "http://127.0.0.1:5000/protected";
+const loginpy = "http://0.0.0.0:5000/login";
+const registerpy = "http://0.0.0.0:5000/register";
+const protectedpy = "http://0.0.0.0:5000/protected";
 
 const login = async () => {
     try {
@@ -87,7 +87,6 @@ function logout() {
 <template>
     <main>
         <div class="login-container" v-if="!isLoggedIn">
-            <h1>sorry our api is broken at the moment :(</h1>
             <input
                 type="text"
                 class="user"
