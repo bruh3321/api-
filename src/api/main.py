@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 app.config['JWT_SECRET_KEY'] = 'pipi'
 jwt = JWTManager(app)
+CORS(app)
 
 def init_db():
     conn = sqlite3.connect('users.db')

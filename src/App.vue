@@ -21,6 +21,13 @@ const loginpy = "http://0.0.0.0:5000/login";
 const registerpy = "http://0.0.0.0:5000/register";
 const protectedpy = "http://0.0.0.0:5000/protected";
 
+function sendMessage() {
+    let chatbox=document.getElementById("activechat")
+    let chatinput=document.getElementById("chatinput")
+    chatbox.value += chatinput.value + "\n";
+    chatinput.value = null
+}
+
 const login = async () => {
     try {
         const response = await axios.post(loginpy, {
@@ -108,13 +115,67 @@ function logout() {
             <div v-if="message" class="error-message">{{ message }}</div>
         </div>
         <div v-else>
-            <h1>Congratulations! You are logged in.</h1>
-            <button class="logout" @click="logout">Log out</button>
+            <div class="container-log">
+                <table>
+                    <tr>
+                        <th>Public chats</th>
+                    </tr>
+                </table>
+                <textarea name="chat" id="activechat" readonly></textarea>
+                <div class="chat-input-container">
+                <input id="chatinput" placeholder="Enter a message" v-model="message" />
+            <button id="send" @click="sendMessage">Send</button>
+            </div>
+        <button class="logout" @click="logout">Log out</button>
+    </div>
         </div>
     </main>
 </template>
 
 <style scoped>
+#activechat {
+    white-space: pre-warp;
+    padding-top: 25px;
+    padding-left: 10px;
+    border: 2px dashed #ff69b4;
+    background-color: rgba(62, 62, 62, 0.9);
+    margin-top: 20px;
+    height: 70vh;
+    width: 90vh;
+    margin-right: 25px;
+    size: fixed;
+    user-select: none;
+    border-radius: 10px;
+}
+#send {
+    position: fixed;
+    bottom: 0;
+    width: 20vh;
+    margin-left: 200px;
+    margin-bottom: 25px;
+}
+#chatinput {
+    position: fixed;
+    bottom: 0;
+    left: 1;
+    width: 65vh;
+    justify-items: center;
+    margin-bottom: 25px;
+}
+table {
+    border: 2px dashed #ff69b4;
+    border-radius: 25px;
+}
+.container-log {
+    background: rgba(50, 50, 50, 0.9);
+    border: 5px dashed #ff69b4;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
+    width: 90vh;
+    height: 90vh;
+}
 body {
     margin: 0;
     font-family: "Comic Sans MS", cursive, sans-serif;
@@ -139,9 +200,11 @@ h1 {
     font-size: 2.5rem;
     color: #ff69b4;
     text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.5);
-    animation: bounce 2s infinite ease-in-out;
 }
 .logout {
+    position: fixed;
+    bottom: 0;
+    right: 0;
     padding: 10px 20px;
     margin: 5px;
     border: none;
@@ -155,7 +218,6 @@ h1 {
     background-color: #8a2be2;
     color: white;
     box-shadow: 0px 5px 15px rgba(138, 43, 226, 0.3);
-    animation: bounce 2s infinite ease-in-out;
 }
 .login-container {
     background: rgba(50, 50, 50, 0.9);
