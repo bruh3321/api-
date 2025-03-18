@@ -4,13 +4,12 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted } from "vue";
 
-onMounted(() => {                   //this is to detect if a user is previously logged in
+onMounted(() => { //this is to detect if a user is previously logged in
     const token = localStorage.getItem("token");
     if (token) {
         isLoggedIn.value = true;
     }
-});         
-
+});
 
 const router = useRouter();
 const username = ref("");
@@ -22,10 +21,17 @@ const registerpy = "http://0.0.0.0:5000/register";
 const protectedpy = "http://0.0.0.0:5000/protected";
 
 function sendMessage() {
-    let chatbox=document.getElementById("activechat")
-    let chatinput=document.getElementById("chatinput")
-    chatbox.value += chatinput.value + "\n";
-    chatinput.value = null
+    const chatbox = document.getElementById("activechat");
+    const chatinput = document.getElementById("chatinput");
+
+    if (chatinput.value.trim()) {
+        const li = document.createElement("li");
+        li.classList.add("chat-message");
+        li.textContent = chatinput.value;
+        chatbox.appendChild(li);
+        chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        chatinput.value = ""; // Clear input
+    }
 }
 
 const login = async () => {
@@ -48,6 +54,7 @@ const login = async () => {
             : "Wrong username or password / or account non-existent";
     }
 };
+
 const register = async () => {
     try {
         const response = await axios.post(registerpy, {
@@ -55,8 +62,7 @@ const register = async () => {
             password: password.value,
         });
         if (response.status === 201) {
-            message.value = "succesfuly registered user";
-            console.log("it did register still");
+            message.value = "Successfully registered user";
         }
     } catch (error) {
         console.error("Registration error:", error);
@@ -65,6 +71,7 @@ const register = async () => {
             : "An error has occurred";
     }
 };
+
 async function getProtectedData() {
     const token = localStorage.getItem("token");
 
@@ -78,12 +85,12 @@ async function getProtectedData() {
             headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log(response.data);
         message.value = response.data.message;
     } catch (error) {
         message.value = "Failed to fetch protected data.";
     }
 }
+
 function logout() {
     localStorage.removeItem("token"); // Remove token
     isLoggedIn.value = false;
@@ -121,104 +128,87 @@ function logout() {
                         <th>Public chats</th>
                     </tr>
                 </table>
-                <textarea name="chat" id="activechat" readonly></textarea>
+                <ul id="activechat" class="chatbox"></ul>
                 <div class="chat-input-container">
-                <input id="chatinput" placeholder="Enter a message" v-model="message" />
-            <button id="send" @click="sendMessage">Send</button>
+                    <input id="chatinput" placeholder="Enter a message" v-model="message" />
+                    <button id="send" @click="sendMessage">Send</button>
+                </div>
+                <button class="logout" @click="logout">Log out</button>
             </div>
-        <button class="logout" @click="logout">Log out</button>
-    </div>
         </div>
     </main>
 </template>
 
 <style scoped>
+/* Animations */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Active Chat Styles */
 #activechat {
-    white-space: pre-warp;
-    padding-top: 25px;
-    padding-left: 10px;
+    white-space: pre-wrap;
+    padding: 10px;
     border: 2px dashed #ff69b4;
     background-color: rgba(62, 62, 62, 0.9);
     margin-top: 20px;
     height: 70vh;
     width: 90vh;
     margin-right: 25px;
-    size: fixed;
-    user-select: none;
+    overflow-y: auto;
     border-radius: 10px;
+    list-style-type: none; /* Remove default list styling */
 }
-#send {
-    position: fixed;
-    bottom: 0;
-    width: 20vh;
-    margin-left: 200px;
-    margin-bottom: 25px;
-}
-#chatinput {
-    position: fixed;
-    bottom: 0;
-    left: 1;
-    width: 65vh;
-    justify-items: center;
-    margin-bottom: 25px;
-}
-table {
-    border: 2px dashed #ff69b4;
-    border-radius: 25px;
-}
-.container-log {
-    background: rgba(50, 50, 50, 0.9);
-    border: 5px dashed #ff69b4;
-    border-radius: 20px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
-    width: 90vh;
-    height: 90vh;
-}
-body {
-    margin: 0;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    background: linear-gradient(135deg, #1a1a1a, #333333);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    color: #ffffff;
-}
-.congrats-container {
-    background: rgba(50, 50, 50, 0.9);
-    border: 5px dashed #8a2be2;
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
-    animation: bounce 2s infinite ease-in-out;
-}
-h1 {
-    font-size: 2.5rem;
-    color: #ff69b4;
-    text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.5);
-}
-.logout {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    border-radius: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition:
-        transform 0.3s,
-        background-color 0.3s;
-    background-color: #8a2be2;
+
+.chat-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #444444;
+    border-radius: 5px;
     color: white;
-    box-shadow: 0px 5px 15px rgba(138, 43, 226, 0.3);
+    word-wrap: break-word;
 }
+
+/* Chat Input Styles */
+#send {
+    width: 20%;
+    margin-left: 20px;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#send:hover {
+    background-color: #8a2be2;
+}
+
+#chatinput {
+    width: 75%;
+    padding: 10px;
+    border: 2px solid #ff69b4;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: #222222;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+#chatinput:hover,
+#chatinput:focus {
+    outline: none;
+    background-color: #444444;
+    border-color: #8a2be2;
+}
+
+/* Login & Registration Styles */
 .login-container {
     background: rgba(50, 50, 50, 0.9);
     border: 5px dashed #ff69b4;
@@ -227,16 +217,6 @@ h1 {
     text-align: center;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
     animation: bounce 2s infinite ease-in-out;
-}
-
-@keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
 }
 
 input {
@@ -273,21 +253,7 @@ button {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition:
-        transform 0.3s,
-        background-color 0.3s;
-}
-
-.login-btn {
-    background-color: #ff69b4;
-    color: white;
-    box-shadow: 0px 5px 15px rgba(255, 105, 180, 0.3);
-}
-
-.register-btn {
-    background-color: #8a2be2;
-    color: white;
-    box-shadow: 0px 5px 15px rgba(138, 43, 226, 0.3);
+    transition: transform 0.3s, background-color 0.3s;
 }
 
 button:hover {
@@ -300,9 +266,53 @@ button:active {
     transform: scale(0.95);
 }
 
+/* Error Message Styling */
 .error-message {
     color: #ff0000;
     font-size: 14px;
     margin-top: 10px;
+}
+
+/* Main Container */
+.container-log {
+    background: rgba(50, 50, 50, 0.9);
+    border: 5px dashed #ff69b4;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    height: 80%;
+}
+
+/* Logout Button */
+.logout {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #8a2be2;
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout:hover {
+    background-color: #6a1bbe;
+}
+
+/* Body Styling */
+body {
+    margin: 0;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a, #333333);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    color: #ffffff;
 }
 </style>
