@@ -4,7 +4,7 @@ import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-
+from flask_socketio import *
 
 app = Flask(__name__)
 
@@ -13,6 +13,12 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'pipi'
 jwt = JWTManager(app)
 CORS(app)
+
+#this is where the sockets code goes hopefully
+
+
+
+
 
 def init_db():
     conn = sqlite3.connect('users.db')

@@ -123,11 +123,7 @@ function logout() {
         </div>
         <div v-else>
             <div class="container-log">
-                <table>
-                    <tr>
-                        <th>Public chats</th>
-                    </tr>
-                </table>
+                <h1>public chats</h1>
                 <ul id="activechat" class="chatbox"></ul>
                 <div class="chat-input-container">
                     <input id="chatinput" placeholder="Enter a message" v-model="message" />
