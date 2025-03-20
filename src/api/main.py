@@ -13,12 +13,22 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'pipi'
 jwt = JWTManager(app)
 CORS(app)
-
-#this is where the sockets code goes hopefully
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 
+@socketio.on('connect')
+def handle__connect():
+    print(f"Client connected: {request.sid}")
+    emit('server_message', {'msg': 'Welcome to the chat!'})
 
+@socketio.on('message')
+def handle__message():
+    print(f"Message received: {data}")
+    send(data, broadcast=True)
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('client disconnected')
 
 def init_db():
     conn = sqlite3.connect('users.db')
@@ -82,4 +92,5 @@ def protected():
 
 if __name__ == '__main__':
     init_db()
+    socketio.run(app, debug=True)
     app.run(host='0.0.0.0', port=5000, debug=True)

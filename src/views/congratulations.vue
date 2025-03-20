@@ -4,7 +4,7 @@
 <template>
   <main>
     <div class="congrats-container">
-      <h1>Congratulations!</h1>
+      
     </div>
   </main>
 </template>
