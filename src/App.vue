@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { onMounted } from "vue";
-import { io } from "socket.io-client"
 
 onMounted(() => { //this is to detect if a user is previously logged in
     const token = localStorage.getItem("token");
@@ -11,11 +10,6 @@ onMounted(() => { //this is to detect if a user is previously logged in
         isLoggedIn.value = true;
     }
 });
-
-const socket = io({
-    autoConnect: true,
-});
-
 
 const router = useRouter();
 const username = ref("");
@@ -25,8 +19,6 @@ const isLoggedIn = ref(false);
 const loginpy = "http://0.0.0.0:5000/login";
 const registerpy = "http://0.0.0.0:5000/register";
 const protectedpy = "http://0.0.0.0:5000/protected";
-
-
 
 function sendMessage() {
     const chatbox = document.getElementById("activechat");
@@ -39,7 +31,6 @@ function sendMessage() {
         chatbox.appendChild(li);
         chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
         chatinput.value = ""; // Clear input
-
     }
 }
 
@@ -132,8 +123,12 @@ function logout() {
         </div>
         <div v-else>
             <div class="container-log">
-                <h1>public chats</h1>
-                <div v-for="msg in chatMessages" :key="msg">{{ msg }}</div>
+                <table>
+                    <tr>
+                        <th>Public chats</th>
+                    </tr>
+                </table>
+                <ul id="activechat" class="chatbox"></ul>
                 <div class="chat-input-container">
                     <input id="chatinput" placeholder="Enter a message" v-model="message" />
                     <button id="send" @click="sendMessage">Send</button>
@@ -168,9 +163,10 @@ function logout() {
     overflow-y: auto;
     border-radius: 10px;
     list-style-type: none; /* Remove default list styling */
-    text-align: left;
 }
+
 .chat-message {
+    text-align: left;
     margin-bottom: 10px;
     padding: 10px;
     background-color: #444444;
