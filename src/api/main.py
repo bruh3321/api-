@@ -15,21 +15,6 @@ jwt = JWTManager(app)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-
-@socketio.on('connect')
-def handle__connect():
-    print(f"Client connected: {request.sid}")
-    emit('server_message', {'msg': 'Welcome to the chat!'})
-
-@socketio.on('message')
-def handle__message():
-    print(f"Message received: {data}")
-    send(data, broadcast=True)
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('client disconnected')
-
 def init_db():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
